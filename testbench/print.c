@@ -6,7 +6,6 @@
 // means.
 
 #include "firmware.h"
-#include "../common/xuartps_hw.h"
 
 void print_chr(char ch)
 {

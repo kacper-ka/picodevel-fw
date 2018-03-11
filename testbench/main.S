@@ -29,7 +29,7 @@
 #define RESULT_ADDR   0x00100000
 
 
-#include "../common/custom_ops.S"
+#include "common/custom_ops.S"
 
 	.section .text
 	.global __start

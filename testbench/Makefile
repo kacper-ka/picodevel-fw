@@ -25,6 +25,7 @@ OBJ_DIRS = $(sort $(dir $(OBJS)))
 
 WITH_FORK = -DWITH_FORK=0
 
+
 .PHONY: all testbench-picodev testbench-picorv32 clean purge
 all:
 	make testbench-picorv32
@@ -73,10 +74,11 @@ $(OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.S $(TEST_DIR)/riscv_test.h $(TEST_DIR)
 #
 $(OBJ_DIR)/%.o: %.c
 	$(TOOLCHAIN_PREFIX)gcc -c -march=rv32i -Os --std=c99 \
-		-Wall -Wextra -pedantic -ffreestanding -nostdlib $(WITH_FORK) -o $@ $<
+		-Wall -Wextra -pedantic -ffreestanding -nostdlib $(WITH_FORK) -I".." \
+		-o $@ $<
 
 $(OBJ_DIR)/%.o: %.S
-	$(TOOLCHAIN_PREFIX)gcc -c -march=rv32im $(WITH_FORK) -o $@ $<
+	$(TOOLCHAIN_PREFIX)gcc -c -march=rv32im $(WITH_FORK) -I".." -o $@ $<
 
 # ---
 # Testbench firmware output files
@@ -86,8 +88,8 @@ $(BUILD_DIR)/%.elf: $(OBJS) $(LINKER_SCRIPT) | $(BUILD_DIR)
 	$(TOOLCHAIN_PREFIX)gcc -Os -ffreestanding -nostdlib $(WITH_FORK) \
 		-Wl,-Bstatic,-T,$(LINKER_SCRIPT),-Map,$(addsuffix .map,$(basename $@)) \
 		-Wl,--strip-debug,-gc-sections,-print-memory-usage \
-		--specs=nano.specs \
-		-o $@ $(OBJS) -I$(COMMON_DIR) -L$(COMMON_DIR) $(LIB) -lgcc
+		--specs=nano.specs -I".." -L"$(COMMON_DIR)" \
+		-o $@ $(OBJS) $(LIB) -lgcc 
 	@echo ' '
 
 $(BUILD_DIR)/%.bin: $(BUILD_DIR)/%.elf
@@ -98,20 +100,4 @@ $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.bin
 	$(DO_MAKEHEX) $< 16384 > $@
 	@echo ' '
 	
-#$(BUILD_DIR)/tb-picodev.elf: $(OBJS) $(PICODEV_LD) | $(BUILD_DIR)
-#	@echo 'Linking picodev testbench firmware...'
-#	$(TOOLCHAIN_PREFIX)gcc -Os -ffreestanding -nostdlib $(SYMBOLS) \
-#		-Wl,-Bstatic,-T,$(PICODEV_LD),-Map,$(addsuffix .map,$(basename $@)) \
-#		-Wl,--strip-debug,-gc-sections,-print-memory-usage \
-#		--specs=nano.specs \
-#		-o $@ $(OBJS) -I$(COMMON_DIR) -L$(COMMON_DIR) $(PICODEV_LIB) -lgcc
-#	@echo ' '
 
-#$(BUILD_DIR)/tb-picorv32.elf: $(OBJS) $(PICORV32_LD) | $(BUILD_DIR)
-#	@echo 'Linking picorv32 testbench firmware...'
-#	$(TOOLCHAIN_PREFIX)gcc -Os -ffreestanding -nostdlib $(SYMBOLS) \
-#		-Wl,-Bstatic,-T,$(PICORV32_LD),-Map,$(addsuffix .map,$(basename $@)) \
-#		-Wl,--strip-debug,-gc-sections,-print-memory-usage \
-#		--specs=nano.specs \
-#		-o $@ $(OBJS) -I"$(COMMON_DIR)" -L"$(COMMON_DIR)" -lgcc $(PICORV32_LIB)
-#	@echo ' '
