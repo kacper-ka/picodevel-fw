@@ -1,6 +1,6 @@
 
 RISCV_PREFIX ?= riscv32-unknown-elf-
-CROSS_PREFIX ?= arm-none-eabi-
+HOST_PREFIX ?= arm-none-eabi-
 
 BUILD_DIR = build
 OBJ_DIR = obj
@@ -108,7 +108,7 @@ $(BUILD_DIR)/%.hex: $(BUILD_DIR)/%.bin
 	@echo ' '
 
 $(BUILD_DIR)/%-payload.o: $(BUILD_DIR)/%.bin
-	$(CROSS_PREFIX)objcopy -I binary -O elf32-littlearm -B arm \
+	$(HOST_PREFIX)objcopy -I binary -O elf32-littlearm -B arm \
 		--redefine-sym _binary_$(BUILD_DIR)_$(subst -,_,$(basename $(notdir $<)))_bin_start=_bin_$(subst -,_,$(basename $(notdir $<)))_start \
 		--redefine-sym _binary_$(BUILD_DIR)_$(subst -,_,$(basename $(notdir $<)))_bin_end=_bin_$(subst -,_,$(basename $(notdir $<)))_end \
 		--redefine-sym _binary_$(BUILD_DIR)_$(subst -,_,$(basename $(notdir $<)))_bin_size=_bin_$(subst -,_,$(basename $(notdir $<)))_size \

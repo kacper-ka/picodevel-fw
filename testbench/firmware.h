@@ -13,6 +13,7 @@
 #include "common/custom_ops.h"
 #include "common/xil_types.h"
 #include "common/xuartps_hw.h"
+#include "common/xgpio_l.h"
 
 // irq.c
 uint32_t *irq(uint32_t *regs, uint32_t irqs);

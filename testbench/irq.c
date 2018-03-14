@@ -133,11 +133,18 @@ uint32_t *__irq_handler(uint32_t *regs, uint32_t irqs)
 		print_str("\n");
 
 #if defined(WITH_FORK) && (WITH_FORK != 0)
+        {
+            uint32_t tmp = XGpio_ReadReg(XPAR_AXI_GPIO_0_BASEADDR, XGPIO_DATA_OFFSET);
+            tmp |= (1 << __get_COREID());
+            XGpio_WriteReg(XPAR_AXI_GPIO_0_BASEADDR, XGPIO_DATA_OFFSET, tmp);
+        }
         print_str("COREID = ");
         print_hex(__get_COREID(), 8);
         print_str("\n");
         if (__get_COREID() != 0)
             __EXIT();
+#else
+        XGpio_WriteReg(XPAR_AXI_GPIO_0_BASEADDR, XGPIO_DATA_OFFSET, 0xFF);
 #endif
 		__asm__ volatile ("ebreak");
 	}
