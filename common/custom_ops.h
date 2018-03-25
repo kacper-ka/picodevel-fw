@@ -35,5 +35,6 @@ __attribute__((always_inline)) static inline void __JOIN(void)
 }
 
 extern uint32_t __CORES_COUNT__;
+extern uint32_t __sim_result;
 
 #endif

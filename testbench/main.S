@@ -42,6 +42,7 @@
 	.global stats
     .global outbyte
     .global puts
+	.global __sim_result
 
 
 /* Main program
@@ -208,9 +209,12 @@ __start:
 	addi a0,zero,'\n'
     jal  ra,outbyte
 	
-	li a0, RESULT_ADDR
+	/* li a0, RESULT_ADDR */
+	lui a0, %hi(__sim_result)
+	addi a0, a0, %lo(__sim_result)
 	li a1, 123456789
 	sw a1,0(a0)
+	/* sw a1,__sim_result */
 
 	/* trap */
 	ebreak
@@ -285,4 +289,3 @@ __init_bss__:
     addi    a0,a0,4
     bne     a0,a1,1b
     ret
-    

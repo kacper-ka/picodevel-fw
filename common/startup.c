@@ -141,5 +141,6 @@ uint32_t * __attribute__((weak))
 __irq_handler(uint32_t* regs, uint32_t irq)
 {
     (void)irq;
+    __EBREAK();
     return regs;
 }

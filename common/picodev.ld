@@ -5,12 +5,12 @@
 
 MEMORY
 {
-    /* program memory, first 64kB of OCM */
+    /* program memory, beginning of high-mapped OCM */
     m_prog      (rx)    : ORIGIN = 0x00000000, LENGTH = 128k
-    /* private memory for each core, 32kB of OCM, address translation in hardware */
-    m_data      (rw)    : ORIGIN = 0xFF000000, LENGTH = 64k
+    /* private memory for each core, address translation in hardware */
+    m_data      (rw)    : ORIGIN = 0xFF000000, LENGTH = 16k
     /* shared memory, first 63MB of DDR RAM */
-    m_shared    (rw)    : ORIGIN = 0x00100000, LENGTH = 63M
+    m_ddr       (rw)    : ORIGIN = 0x00100000, LENGTH = 63M
 }
 
 OUTPUT_FORMAT("elf32-littleriscv", "elf32-littleriscv", "elf32-littleriscv")
@@ -178,15 +178,17 @@ SECTIONS
     /* Shared data segment                                                */
     /*--------------------------------------------------------------------*/
     
-    . = ORIGIN(m_shared);
+    . = ORIGIN(m_ddr);
     PROVIDE( sshared = . );
     _sshared = .;
     
     .shared (NOLOAD) :
     {
+		/* Reserve space for simulation verification result */
+		*(.sim_result)
         *(.shared)
         *(.shared.*)
-    } > m_shared
+    } > m_ddr
     
     . = ALIGN(4);
     PROVIDE( eshared = . );

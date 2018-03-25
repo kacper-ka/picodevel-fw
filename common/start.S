@@ -127,3 +127,8 @@ irq_stack:
 
 .section .stack
 	.fill Stack_Size,4
+
+.section .sim_result
+.global __sim_result
+__sim_result:
+	.word 0
