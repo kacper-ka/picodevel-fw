@@ -82,6 +82,8 @@
 												 to indicate that driver instance is
 												 started and it can be enabled. */
 
+#define INLINE inline
+
 /* @name New types
  * New simple types.
  * @{
@@ -187,6 +189,154 @@ typedef void (*XExceptionHandler) (void *InstancePtr);
 #define LOWER_32_BITS(n) ((u32)(n))
 
 
+
+
+/*****************************************************************************/
+/**
+*
+* @brief    Performs an input operation for a memory location by reading
+*           from the specified address and returning the 8 bit Value read from
+*            that address.
+*
+* @param	Addr: contains the address to perform the input operation
+*
+* @return	The 8 bit Value read from the specified input address.
+
+*
+******************************************************************************/
+static INLINE u8 Xil_In8(UINTPTR Addr)
+{
+	return *(volatile u8 *) Addr;
+}
+
+/*****************************************************************************/
+/**
+*
+* @brief    Performs an input operation for a memory location by reading from
+*           the specified address and returning the 16 bit Value read from that
+*           address.
+*
+* @param	Addr: contains the address to perform the input operation
+*
+* @return	The 16 bit Value read from the specified input address.
+*
+******************************************************************************/
+static INLINE u16 Xil_In16(UINTPTR Addr)
+{
+	return *(volatile u16 *) Addr;
+}
+
+/*****************************************************************************/
+/**
+*
+* @brief    Performs an input operation for a memory location by
+*           reading from the specified address and returning the 32 bit Value
+*           read  from that address.
+*
+* @param	Addr: contains the address to perform the input operation
+*
+* @return	The 32 bit Value read from the specified input address.
+*
+******************************************************************************/
+static INLINE u32 Xil_In32(UINTPTR Addr)
+{
+	return *(volatile u32 *) Addr;
+}
+
+/*****************************************************************************/
+/**
+*
+* @brief     Performs an input operation for a memory location by reading the
+*            64 bit Value read  from that address.
+*
+*
+* @param	Addr: contains the address to perform the input operation
+*
+* @return	The 64 bit Value read from the specified input address.
+*
+******************************************************************************/
+static INLINE u64 Xil_In64(UINTPTR Addr)
+{
+	return *(volatile u64 *) Addr;
+}
+
+/*****************************************************************************/
+/**
+*
+* @brief    Performs an output operation for an memory location by
+*           writing the 8 bit Value to the the specified address.
+*
+* @param	Addr: contains the address to perform the output operation
+* @param	Value: contains the 8 bit Value to be written at the specified
+*           address.
+*
+* @return	None.
+*
+******************************************************************************/
+static INLINE void Xil_Out8(UINTPTR Addr, u8 Value)
+{
+	volatile u8 *LocalAddr = (volatile u8 *)Addr;
+	*LocalAddr = Value;
+}
+
+/*****************************************************************************/
+/**
+*
+* @brief    Performs an output operation for a memory location by writing the
+*            16 bit Value to the the specified address.
+*
+* @param	Addr contains the address to perform the output operation
+* @param	Value contains the Value to be written at the specified address.
+*
+* @return	None.
+*
+******************************************************************************/
+static INLINE void Xil_Out16(UINTPTR Addr, u16 Value)
+{
+	volatile u16 *LocalAddr = (volatile u16 *)Addr;
+	*LocalAddr = Value;
+}
+
+/*****************************************************************************/
+/**
+*
+* @brief    Performs an output operation for a memory location by writing the
+*           32 bit Value to the the specified address.
+*
+* @param	Addr contains the address to perform the output operation
+* @param	Value contains the 32 bit Value to be written at the specified
+*           address.
+*
+* @return	None.
+*
+******************************************************************************/
+static INLINE void Xil_Out32(UINTPTR Addr, u32 Value)
+{
+#ifndef ENABLE_SAFETY
+	volatile u32 *LocalAddr = (volatile u32 *)Addr;
+	*LocalAddr = Value;
+#else
+	XStl_RegUpdate(Addr, Value);
+#endif
+}
+
+/*****************************************************************************/
+/**
+*
+* @brief    Performs an output operation for a memory location by writing the
+*           64 bit Value to the the specified address.
+*
+* @param	Addr contains the address to perform the output operation
+* @param	Value contains 64 bit Value to be written at the specified address.
+*
+* @return	None.
+*
+******************************************************************************/
+static INLINE void Xil_Out64(UINTPTR Addr, u64 Value)
+{
+	volatile u64 *LocalAddr = (volatile u64 *)Addr;
+	*LocalAddr = Value;
+}
 
 
 /************************** Constant Definitions *****************************/
