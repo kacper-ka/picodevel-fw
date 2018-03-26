@@ -22,7 +22,7 @@ __attribute__((always_inline)) static inline void __EBREAK(void)
     __asm__ volatile ("ebreak");
 }
 
-__attribute__((always_inline)) static inline uint32_t __FORK(void)
+__attribute__((always_inline)) static inline int32_t __FORK(void)
 {
     register uint32_t a0 __asm__("a0");
     __asm__ volatile (".word 0x0000452B" : "=r" (a0));

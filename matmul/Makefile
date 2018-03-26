@@ -6,7 +6,7 @@ HOST_PREFIX ?= arm-none-eabi-
 TARGET_PICORV32 = matmul-picorv32
 TARGET_PICODEV = matmul-picodev
 
-BUILD_DIR = build
+BUILD_DIR ?= build
 OBJ_DIR = obj
 COMMON_DIR = ../common
 PICODEV_LD = $(COMMON_DIR)/picodev.ld
@@ -66,7 +66,7 @@ $(OBJ_DIRS):
 	mkdir -p $@
 
 $(OBJ_DIR)/%.o: %.c
-	$(RISCV_PREFIX)gcc -c -march=rv32i -Os --std=c99 \
+	$(RISCV_PREFIX)gcc -c -march=rv32im -Os --std=c99 \
 		-Wall -Wextra -pedantic -ffreestanding -nostdlib \
 		$(WITH_FORK) $(MATMUL_SZ) -I".." -o $@ $<
 
