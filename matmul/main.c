@@ -25,6 +25,7 @@ int main(void)
     int row, col;
     
 #if defined(WITH_FORK) && (WITH_FORK != 0)
+    __update_CORES_COUNT();
 	printf("System has %lu cores.\n", __CORES_COUNT__);
 #else
     printf("Single core picorv32.\n");

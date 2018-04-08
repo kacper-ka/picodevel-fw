@@ -104,16 +104,6 @@ __start(void)
     
     __run_init_array();
 
-#if defined(WITH_FORK) && (WITH_FORK != 0)
-    // update cores count
-    __CORES_COUNT__ = 0;
-    while (__FORK() > 0);
-    __JOIN();
-    __CORES_COUNT__++;
-    if (__get_COREID() != 0)
-        __EXIT();
-#endif
-
     code = main();
 
     __run_fini_array();
@@ -143,4 +133,16 @@ __irq_handler(uint32_t* regs, uint32_t irq)
     (void)irq;
     __EBREAK();
     return regs;
+}
+
+void __update_CORES_COUNT(void) {
+#if defined(WITH_FORK) && (WITH_FORK != 0)
+    // update cores count
+    __CORES_COUNT__ = 0;
+    while (__FORK() > 0);
+    __JOIN();
+    __CORES_COUNT__++;
+    if (__get_COREID() != 0)
+        __EXIT();
+#endif
 }

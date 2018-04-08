@@ -44,7 +44,9 @@
     .global puts
 	.global __sim_result
 
-
+_txt_COREID:
+.string "COREID "
+	
 /* Main program
  **********************************/
 
@@ -53,14 +55,24 @@ __start:
 	jal ra,__init_bss__
 	
 #if defined(WITH_FORK) && (WITH_FORK != 0)
-	addi x2,zero,-1
-1:	picorv32_fork_insn(x1)
-	beq x1,zero,2f // jump to join if fork successful
-	beq x1,x2,3f // jump to epilogue if fork failed
-	jal zero,1b // newly spawned process jumps to fork
-
-2:	picorv32_join_insn()
-	jal zero,3f
+	/* present yourself */
+	lui  a0, %hi(_txt_COREID)
+	addi a0, a0, %lo(_txt_COREID)
+	jal  ra, puts
+	picorv32_coreid_insn(a0)
+	addi a0, a0, '0'
+	jal  ra, outbyte
+	addi a0, zero, '\n'
+	jal  ra, outbyte
+	
+//	addi x2,zero,-1
+//1:	picorv32_fork_insn(x1)
+//	beq x1,zero,2f // jump to join if fork successful
+//	beq x1,x2,3f // jump to epilogue if fork failed
+//	jal zero,1b // newly spawned process jumps to fork
+//
+//2:	picorv32_join_insn()
+//	jal zero,3f
 #endif
 
 3:	addi x1,zero,1000
